@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import "./globals.css";
 
 const geist = Geist({
@@ -54,12 +56,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="neo"
       className={`${geist.variable} ${plusJakarta.variable} ${inter.variable} h-full`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('invva-theme');if(t==='neo'||t==='glass'||t==='brutal'||t==='clay')document.documentElement.setAttribute('data-theme',t)}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <ThemeSwitcher />
+        </ThemeProvider>
       </body>
     </html>
   );
